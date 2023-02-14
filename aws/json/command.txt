@@ -16,3 +16,4 @@
    16  aws cloudwatch put-metric-alarm --cli-input-json file://aws/json/alarm-config.json
    19  git tag week-1
    20  git push --tags
+   21 history
