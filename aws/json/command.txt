@@ -12,7 +12,7 @@
    12  aws budgets create-budget     --account-id $AWS_ACCOUNT_ID     --budget file://aws/json/budget.json     --notifications-with-subscribers file://aws/json/budget-notifications-with-subscribers.json
    13  clear
    14  aws sns create-topic --name billing-alarm
-   15  aws sns subscribe     --topic-arn="arn:aws:sns:us-east-2:182722375787:billing-alarm"     --protocol email     --notification-endpoint devdeen25@gmail.com
+   15  aws sns subscribe     --topic-arn="arn:aws:sns:us-east-2:182722375787:billing-alarm"     --protocol email     --notification-endpoint example@gmail.com
    16  aws cloudwatch put-metric-alarm --cli-input-json file://aws/json/alarm-config.json
    19  git tag week-1
    20  git push --tags
