@@ -24,7 +24,7 @@ HERE ARE THE OVERVIEW FOR WEEK-0 (Feb12-18)
 
 - Created Conceptual Diagram in Lucid Charts.
 
-![Proof of Conceptual Diagram](assets/Cruddur-Conceptual-Diagram-week0.pdf)
+![Proof of Conceptual Diagram](assets/Cruddur-Conceptual-Diagram-week0.png)
 
 - Installed AWS CLI and configured it on gitpod, then i export the access keys, that way i don't have to reconfigure AWS CLI everytime am working in the gitpod workspace.
 
