@@ -20,7 +20,7 @@ HERE ARE THE OVERVIEW FOR WEEK-0 (Feb12-18)
 
 - Created Logical Architectual Diagram in Lucid Charts and submitted only to find out that Amazon RDS image is not inside the VPC so i modified the Diagram and made some adjustments.
 
-![Proof of Logical Architectual Diagram](assets/Cruddur-Logic-Diagram-week0.pdf)
+![Proof of Logical Architectual Diagram](assets/Cruddur-Logic-Diagram-week0.png)
 
 - Created Conceptual Diagram in Lucid Charts.
 
