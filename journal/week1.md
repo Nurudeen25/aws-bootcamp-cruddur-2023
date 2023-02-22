@@ -11,6 +11,10 @@ HERE ARE THE OVERVIEW FOR WEEK-1 (Feb18-25)
 - I watched Chirag's week-1 Spending considerations 
 
 - Watched Ashish's Week-1 Container Security Considerations and play with it
+![proof of container security considerations](assets/Amazon-Inspector.png)
+![proof of container security considerations](assets/Secrets-Manager.png)
+![proof of container security considerations](assets/Snyk-Vulnerabilities-Scanning.png)
+![proof of container security considerations](assets/Snyk-Vulnerabilities-Scanning-fixed.png)
 
 - I did create Dockerfile and docker-compose file for Containerize Application and expose Dockerfile on port 4569 then i unlock it and docker-compose on port 3000 then i unlock it as well
 
