@@ -2,7 +2,7 @@ Week 1 — App Containerization
 
 HERE ARE THE OVERVIEW FOR WEEK-1 (Feb18-25)
 
--I watched the live stream video and take notes
+- Watched the live stream video and take notes
 
 - Watched the Grading Homework Summaries and from my understanding we only need the main branch, I already created new branch for week-0 and my assignment for week-0 are in the branch, So i did merge the week-0 branch to the Main branch and push everything upto date. 
 
