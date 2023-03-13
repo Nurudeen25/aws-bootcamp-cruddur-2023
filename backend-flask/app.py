@@ -81,7 +81,7 @@ cognito_jwt_token = CognitoJwtToken(
 )
 
 # X-Ray ----------
-XRayMiddleware(app, xray_recorder)
+#XRayMiddleware(app, xray_recorder)
 
 #  honeyComb ..........
 # Initialize automatic instrumentation with Flask
