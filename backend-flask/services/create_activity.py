@@ -54,6 +54,7 @@ class CreateActivity:
         'expires_at': (now + ttl_offset).isoformat()
       }
     return model
+    
   def create_activity(handle, message, expires_at):
     sql = db.template('create_activity')
     uuid = db.query_commit(sql,{
