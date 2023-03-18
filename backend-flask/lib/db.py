@@ -46,7 +46,6 @@ class Db:
     pattern = r"\bRETURNING\b"
     is_returning_id = re.search(pattern, sql)
 
-    print(params,"sssssssxxxxxxxxxxxx")
     try:
       with self.pool.connection() as conn:
         cur =  conn.cursor()
@@ -74,7 +73,6 @@ class Db:
     self.print_sql('json',sql)
     self.print_params(params)
     wrapped_sql = self.query_wrap_object(sql)
-
     with self.pool.connection() as conn:
       with conn.cursor() as cur:
         cur.execute(wrapped_sql,params)
@@ -112,7 +110,7 @@ class Db:
 
     # print the pgcode and pgerror exceptions
 
-    # print ("pgerror:", err.pgerror)
-    # print ("pgcode:", err.pgcode, "\n")
+    print ("pgerror:", err.pgerror)
+    print ("pgcode:", err.pgcode, "\n")
 
 db = Db()
