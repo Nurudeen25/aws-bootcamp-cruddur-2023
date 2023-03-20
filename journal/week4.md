@@ -3,8 +3,7 @@
 - Watched Ashish's Week 4 - Security Considerations
 
 - Created RDS Postgres Instance
-
-  ![](assets/RDS-Postgres Instance.png)
+  ![](assets/RDS-Postgres-Instance.png)
   
 - Created Lambda function and created IAM role and attach customer-managed policy to my role for Lambda VPC to allow execution
   ![](assets/Lambda-Functions.png)
