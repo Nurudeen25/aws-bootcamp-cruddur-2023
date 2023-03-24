@@ -80,4 +80,4 @@ class CreateMessage:
       #     other_user_handle=other_user['handle']
       #   )
       model['data'] = data
-    return model
+    return model 
