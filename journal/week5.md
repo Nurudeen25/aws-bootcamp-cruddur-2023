@@ -13,7 +13,7 @@ HERE ARE THE OVERVIEW FOR WEEK-5 (Mar18-25)
 - I implement Pattern Scripts for Read and List Conversations
   ![Proof of List and Read Conversations](assets/Read-List-Conversation.png)
 
-- I implement Update Cognito ID Script for Postgres Database
+- I implement and Update Cognito ID Script for Postgres Database
   ![Proof Of Updated Cognito ID Scripts](assets/Update-Cognito-ID-Scripts.png)
 
 - I implement (Pattern A) Listing Messages in Message Group into the Application
