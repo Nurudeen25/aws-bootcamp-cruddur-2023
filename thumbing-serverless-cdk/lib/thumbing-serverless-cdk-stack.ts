@@ -3,8 +3,6 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
-import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
-import * as sns from 'aws-cdk-lib/aws-sns';
 import { Construct } from 'constructs';
 import * as dotenv from 'dotenv';
 
@@ -17,16 +15,12 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     super(scope, id, props);
 
     // The code that defines your stack goes here
-    // const uploadsBucketName: string = process.env.UPLOADS_BUCKET_NAME as string;
-    // const assetsBucketName: string = process.env.ASSETS_BUCKET_NAME as string;
     const bucketName: string = process.env.THUMBING_BUCKET_NAME as string;
     const folderInput: string = process.env.THUMBING_S3_FOLDER_INPUT as string;
     const folderOutput: string = process.env.THUMBING_S3_FOLDER_OUTPUT as string;
     const webhookUrl: string = process.env.THUMBING_WEBHOOK_URL as string;
     const topicName: string = process.env.THUMBING_TOPIC_NAME as string;
     const functionPath: string = process.env.THUMBING_FUNCTION_PATH as string;
-    // console.log('uploadsBucketName',)
-    // console.log('assetsBucketName',assetsBucketName)
     console.log('bucketName',bucketName)
     console.log('folderInput',folderInput)
     console.log('folderOutput',folderOutput)
@@ -34,23 +28,15 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     console.log('topicName',topicName)
     console.log('functionPath',functionPath)
 
-    // const uploadsBucket = this.createBucket(uploadsBucketName);
-    // const assetsBucket = this.importBucket(bucketName);
+
     const bucket = this.importBucket(bucketName);
     const lambda = this.createLambda(functionPath, bucketName, folderInput, folderOutput)
 
     // add our s3 event notifications
     this.createS3NotifyToLambda(folderInput,lambda,bucket)
-    // this.createS3NotifyToSns(folderOutput,snsTopic,assetsBucket)
 
-    // create policies
-    // const s3UploadsReadWritePolicy = this.createPolicyBucketAccess(uploadsBucket.bucketArn)
-    // const s3AssetsReadWritePolicy = this.createPolicyBucketAccess(assetsBucket.bucketArn)
-
-    // attach policies for permissions
-    // lambda.addToRolePolicy(s3UploadsReadWritePolicy);
-    // lambda.addToRolePolicy(s3AssetsReadWritePolicy);
-    //lambda.addToRolePolicy(snsPublishPolicy);
+    const s3ReadWritePolicy = this.createPolicyBucketAccess(bucket.bucketArn)
+    lambda.addToRolePolicy(s3ReadWritePolicy);
 
   }
   createBucket(bucketName: string): s3.IBucket {
@@ -91,17 +77,17 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     )
   }
 
-  // createPolicyBucketAccess(bucketArn: string){
-  //   const s3ReadWritePolicy = new iam.PolicyStatement({
-  //     actions: [
-  //       's3:GetObject',
-  //       's3:PutObject',
-  //     ],
-  //     resources: [
-  //       `${bucketArn}/*`,
-  //     ]
-  //   });
-  //   return s3ReadWritePolicy;
-  // }
+  createPolicyBucketAccess(bucketArn: string){
+    const s3ReadWritePolicy = new iam.PolicyStatement({
+      actions: [
+        's3:GetObject',
+        's3:PutObject',
+      ],
+      resources: [
+        `${bucketArn}/*`,
+      ]
+    });
+    return s3ReadWritePolicy;
+  }
 }
 
