@@ -250,6 +250,7 @@ def data_handle(handle):
   else:
     return model['data'], 200
 
+
 @app.route("/api/activities/search", methods=['GET'])
 def data_search():
   term = request.args.get('term')
