@@ -21,12 +21,10 @@ tasks:
 # this react line is just to npm i so i don't have to do it everytime
   - name: react-js
     command: | 
-      "$THEIA_WORKSPACE_ROOT/bin/frontend/generate-env"
       cd frontend-react-js
       npm i
   - name: flask 
     command: | 
-      "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env"
       cd backend-flask 
       pip install -r requirements.txt
   - name: fargate 
@@ -42,14 +40,10 @@ tasks:
       cd thumbing-serverless-cdk
       cp .env.example .env
       npm i
-  - name: docker
-    before: |
-      "$THEIA_WORKSPACE_ROOT/bin/ecr/login"
 vscode:
   extensions:
     - 42Crunch.vscode-openapi
     - cweijan.vscode-postgresql-client2
-
 ports:
   - name: frontend
     port: 3000
