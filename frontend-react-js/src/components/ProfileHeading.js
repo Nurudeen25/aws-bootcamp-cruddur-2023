@@ -27,8 +27,8 @@ export default function ProfileHeading(props) {
       </div>
       <EditProfileButton setPopped={props.setPopped} />
     </div>
-    <div className="bio">{props.profle.bio}</div>
-    
+    <div className="bio">{props.profile.bio}</div>
+
   </div>
   );
 }
