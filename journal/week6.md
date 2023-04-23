@@ -2,9 +2,9 @@
 
 HERE ARE THE OVERVIEW FOR WEEK-6-7 (Mar25-April-8)
 
-'''sh
+```sh
 Watch ECS Security by Ashish
-'''
+```
 
 - I Provision ECS Cluster
   ![](assets/ecs-cluster.png)
@@ -13,9 +13,9 @@ Watch ECS Security by Ashish
   ![](assets/ecr-repository.png)
   ![](assets/pushimg-to-backend.png)
   
-'''sh
+```sh
   Install Postgres Driver in the Backend Application
-'''
+```
 
 - I Deploy Backend Flask app as a service to Fargate
   ![](assets/backend-flask-app.png)
@@ -51,9 +51,9 @@ Watch ECS Security by Ashish
 - I Implement Secure Flask by not running in debug mode
   ![](assets/flask-app.png)
 
-'''sh
+```sh
 Implement Refresh Token for Amazon Cognito
-'''
+```
 
 - I Refactor bin directory to be top level
   ![](assets/flask-app.png)
@@ -62,8 +62,8 @@ Implement Refresh Token for Amazon Cognito
   ![](assets/backend-xray.png)
   ![](assets/ecs-cluster.png)
   
-'''sh
+```sh
 Change Docker Compose to explicitly use a user-defined network
 Create Dockerfile specfically for production use case
 Using ruby generate out env dot files for docker using erb templates
-'''
+```
