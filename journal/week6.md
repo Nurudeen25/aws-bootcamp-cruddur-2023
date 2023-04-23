@@ -63,7 +63,7 @@ Implement Refresh Token for Amazon Cognito
   ![](assets/ecs-cluster.png)
   
 ```sh
-Change Docker Compose to explicitly use a user-defined network
-Create Dockerfile specfically for production use case
-Using ruby generate out env dot files for docker using erb templates
+I Change Docker Compose to explicitly use a user-defined network
+I Create Dockerfile specfically for production use case
+I use ruby generate out env dot files for docker using erb templates
 ```
