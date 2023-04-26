@@ -38,7 +38,6 @@ import logging
 from time import strftime
 
 # Rollbar ------
-import os
 import rollbar
 import rollbar.contrib.flask
 from flask import got_request_exception
@@ -67,8 +66,8 @@ xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 
 # OTEL -------
 # Show this in the logs within the backend-flask app (STDOUT)
-simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
-provider.add_span_processor(simple_processor)
+# simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
+# provider.add_span_processor(simple_processor)
 
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
@@ -110,6 +109,7 @@ cors = CORS(
 
 #Rollbar -------------
 rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
+
 @app.before_first_request
 def init_rollbar():
     """init rollbar module"""
@@ -227,7 +227,7 @@ def data_home():
     # authenticated request
     app.logger.debug("authenticated")
     app.logger.debug(claims)
-    app.logger.debug(claims['username'])
+    # app.logger.debug(claims['username'])
     data = HomeActivities.run(cognito_user_id=claims['username'])
   except TokenVerifyError as e:
     # unauthenticated request
@@ -283,7 +283,8 @@ def data_show_activity(activity_uuid):
 @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_activities_reply(activity_uuid):
-  user_handle  = 'andrewbrown'
+  # user_handle  = 'andrewbrown'
+  user_handle = request.json["user_handle"]
   message = request.json['message']
   model = CreateReply.run(message, user_handle, activity_uuid)
   if model['errors'] is not None:
@@ -301,8 +302,8 @@ def data_users_short(handle):
 @app.route("/api/profile/update", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_update_profile():
-  bio          = request.json.get('bio',None)
-  display_name = request.json.get('display_name',None)
+  bio          = request.json.get('bio', None)
+  display_name = request.json.get('display_name', None)
   access_token = extract_access_token(request.headers)
   try:
     claims = cognito_jwt_token.verify(access_token)
