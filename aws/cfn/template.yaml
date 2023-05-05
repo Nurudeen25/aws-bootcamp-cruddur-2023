@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Setup ECS Cluster
+Resources:
+  ECSCluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: MyCluster1
+      CapacityProviders:
+        - FARGATE
+# Parameters:
+# Mappings:
+# Outputs:
