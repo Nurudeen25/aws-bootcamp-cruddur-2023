@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+# VPC
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true 
+      EnableDnsSupport: true 
+      InstanceTenancy: default
+      Tags:
+        - Key: Name 
+          Value: CruddurVPC
+  IGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: CruddurIGW
+  AttachIGW:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPC
+      InternetGatewayId:
+        Ref: IGW
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:  
+        Ref: VPC
+      Tags:
+        - Key: Name
+          Value: CruddurRT
+  RouteToIGW:
+    Type: AWS::EC2::Route
+    DependsOn: AttachIGW
+    Properties:
+       RouteTableId:
+         Ref: RouteTable
+       DestinationCidrBlock: 0.0.0.0/0
+       GatewayId:
+         Ref: IGW
+  # RouteToLocal:
+  #   Type: AWS::EC2::Route
+  #   DependsOn: AttachInternetGateway
+  #   Properties:
+  #      RouteTableId:
+  #        Ref: myRouteTable
+  #        GatewayId: "local"
+  #      DestinationCidrBlock: 10.0.0.0/16
