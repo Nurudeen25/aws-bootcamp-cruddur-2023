@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+# Parameters:
+Resources:
+  FargateCluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: !Sub "${AWS::StackName}FargateCluster"
+      CapacityProviders:
+        - FARGATE
+      ClusterSettings:
+        - Name: ContainerInsights
+          Value: enabled
+      Configuration:
+        ExecureCommandConfiguration:
+
+          Logging: DEFAULT
+      ServiceConnectDefaults:
+        Namespace: cruddur
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub "${AWS::StackName}ALB"
+      IpAddressType: ipv4
+      Scheme: internet-facing
+      SecurityGroups:
+        -
+      LoadBalancerAttributes:
+        - Name: routing.http2.enabled
+          Value: true
+        - Name: routing.http.preserve_host_header.enabled
+          Value: false
+        - Name: deletion_protection.enabled
+          Value: true
+        - Name: load_balancing.cross_zone.enabled
+          Value: false
