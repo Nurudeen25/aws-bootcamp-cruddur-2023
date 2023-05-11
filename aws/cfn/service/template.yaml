@@ -1,0 +1,154 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: |
+  Task Definition File
+  Service
+
+Parameters:
+  NetworkingStack:
+    Type: String
+    Description: This is our base layer of networking components eg. VPC, SUBNETS
+    Default: CrdNet
+  ClusterStack:
+    Type: String
+    Description: This is our cluster layer eg.  ECS Cluster, ALB
+    Default: CrdCluster
+  ContainerPort:
+    Type: String
+    Default: 4567
+  ServiceCpu:
+    Type: String
+    Default: '256'
+  ServiceMemory:
+    Type: String
+    Default: '512'
+  ServiceName:
+    Type: String
+    Default: backend-flask
+  TaskFamily:
+    Type: String
+    Default: backend-flask
+Resources:
+  ServiceSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${AWS::StackName}ALBSG"
+      GroupDescription: Public facing SG for our Cruddur ALB
+      VpcId: 
+        Fn::ImportValue:
+          !Sub "${NetworkingStack}VpcId"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          SourceSecurityGroupId:
+            Fn::ImportValue:
+              !Sub "${ClusterStack}ALBSecurityGroupId"
+          FromPort: 80
+          ToPort: 80
+          CidrIp: '0.0.0.0/0'
+          Description: ALB HTTP
+  FargateService:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html
+    Type: AWS::ECS::Service
+    Properties: 
+      Cluster: 
+      DeploymentConfiguration: 
+      DeploymentController:
+      DesiredCount: Number
+      EnableECSManagedTags: TRUE
+      EnableExecuteCommand: True
+      HealthCheckGracePeriodSeconds: Number
+      LaunchType: FARGATE
+      LoadBalancers:
+        - TargetGroupArn: arn:aws:elasticloadbalancing:us-east-2:182722375787:targetgroup/cruddur-backend-flask-tg/2725750bc0a78747
+          ContainerName: backend-flask
+          ContainerPort: !Ref ContainerPort
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !GetAtt ServiceSG.GroupId
+          Subnets:
+            Fn::Split:
+              - ","
+              - Fn::ImportValue:
+                  !Sub "${NetworkingStack}PublicSubnetIds"
+      PlatformVersion: LATEST
+      PropagateTags: SERVICE
+      ServiceConnectConfiguration: 
+      ServiceName: !Ref ServiceName
+      TaskDefinition: !Ref TaskFamily
+
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Ref TaskFamily
+      ExecutionRoleArn: arn:aws:iam::182722375787:role/CruddurServiceExecutionRole
+      TaskRoleArn: arn:aws:iam::182722375787:role/CruddurTaskRole
+      NetworkMode: awsvpc
+      Cpu: 256
+      Memory: 512
+      RequiresCompatibilities:
+        - FARGATE
+      ContainerDefinitions:
+        - Name: xray
+          Image: public.ecr.aws/xray/aws-xray-daemon
+          Essential: true
+          User: "1337"
+          PortMappings:
+            - Name: xray
+              ContainerPort: 2000
+              Protocol: udp
+        - Name: backend-flask
+          Image: 182722375787.dkr.ecr.us-east-2.amazonaws.com/backend-flask
+          Essential: true
+          HealthCheck:
+            Command:
+              - CMD-SHELL
+              - python /backend-flask/bin/health-check
+            Interval: 30
+            Timeout: 5
+            Retries: 3
+            StartPeriod: 60
+          PortMappings:
+            - Name: backend-flask
+              ContainerPort: 4567
+              Protocol: tcp
+              AppProtocol: http
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: cruddur
+              awslogs-region: us-east-2
+              awslogs-stream-prefix: backend-flask
+          Environment:
+            - Name: OTEL_SERVICE_NAME
+              Value: backend-flask
+            - Name: OTEL_EXPORTER_OTLP_ENDPOINT
+              Value: https://api.honeycomb.io
+            - Name: AWS_COGNITO_USER_POOL_ID
+              Value: us-east-2_MJnO05q1D
+            - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
+              Value: 5fude6ad8r2f35cl2bgr63g1qq
+            - Name: FRONTEND_URL
+              Value: "*"
+            - Name: BACKEND_URL
+              Value: "*"
+            - Name: AWS_DEFAULT_REGION
+              Value: us-east-2
+          Secrets:
+            - Name: AWS_ACCESS_KEY_ID
+              ValueFrom: arn:aws:ssm:us-east-2:182722375787:parameter/cruddur/backend-flask/AWS_ACCESS_KEY_ID
+            - Name: AWS_SECRET_ACCESS_KEY
+              ValueFrom: arn:aws:ssm:us-east-2:182722375787:parameter/cruddur/backend-flask/AWS_SECRET_ACCESS_KEY
+            - Name: CONNECTION_URL
+              ValueFrom: arn:aws:ssm:us-east-2:182722375787:parameter/cruddur/backend-flask/CONNECTION_URL
+            - Name: ROLLBAR_ACCESS_TOKEN
+              ValueFrom: arn:aws:ssm:us-east-2:182722375787:parameter/cruddur/backend-flask/ROLLBAR_ACCESS_TOKEN
+            - Name: OTEL_EXPORTER_OTLP_HEADERS
+              ValueFrom: arn:aws:ssm:us-east-2:182722375787:parameter/cruddur/backend-flask/OTEL_EXPORTER_OTLP_HEADERS
+
+  
+  ExecutionRole:
+  TaskRole:
+Resources:
