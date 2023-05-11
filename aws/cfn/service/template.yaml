@@ -97,10 +97,12 @@ Resources:
       DesiredCount: 1
       EnableECSManagedTags: True
       EnableExecuteCommand: True
-      HealthCheckGracePeriodSeconds: 0
+      HealthCheckGracePeriodSeconds: 100
       LaunchType: FARGATE
       LoadBalancers:
-        - TargetGroupArn: arn:aws:elasticloadbalancing:us-east-2:182722375787:targetgroup/cruddur-backend-flask-tg/2725750bc0a78747
+        - TargetGroupArn:
+            Fn::ImportValue:
+              !Sub "${ClusterStack}BackendTGArn"
           ContainerName: backend-flask
           ContainerPort: !Ref ContainerPort
       NetworkConfiguration:
@@ -118,6 +120,13 @@ Resources:
       ServiceConnectConfiguration: 
         Enabled: true
         Namespace: "cruddur"
+        # TODO - if you want to log
+        # LogConfiguration
+        Services: 
+          - DiscoveryName: backend-flask
+            PortName: backend-flask
+            ClientAliases:
+              - Port: !Ref ContainerPort
       ServiceName: !Ref ServiceName
       TaskDefinition: !Ref TaskDefinition
   TaskDefinition:
@@ -253,3 +262,8 @@ Resources:
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
         - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
 
+Outputs:
+  ServiceSecurityGroupId:
+    Value: !GetAtt ServiceSG.GroupId
+    Export:
+      Name: !Sub "${AWS::StackName}ServiceSecurityGroupId"
