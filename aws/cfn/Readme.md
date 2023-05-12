@@ -10,3 +10,5 @@ gp env CFN_BUCKET="cfn-harvestdam-artifacts"
 ```
 
 > remember bucket names are unique to the provide code example you may need to adjust
+
+After creating the rds db cfn. Have to change the endpoint from AWS system manager - Parameter store
