@@ -3,6 +3,8 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: |
   Task Definition File
   Service
+  Execution Role
+  Task Role
 
 Parameters:
   NetworkingStack:
@@ -14,7 +16,7 @@ Parameters:
     Description: This is our cluster layer eg.  ECS Cluster, ALB
     Default: CrdCluster
   ContainerPort:
-    Type: String
+    Type: Number
     Default: 4567
   ServiceCpu:
     Type: String
@@ -79,21 +81,22 @@ Resources:
       DeploymentController:
         Type: ECS
       DesiredCount: 1
-      EnableECSManagedTags: True
-      EnableExecuteCommand: True
-      HealthCheckGracePeriodSeconds: 100
+      EnableECSManagedTags: true
+      EnableExecuteCommand: true
+      HealthCheckGracePeriodSeconds: 0
       LaunchType: FARGATE
       LoadBalancers:
         - TargetGroupArn:
             Fn::ImportValue:
               !Sub "${ClusterStack}BackendTGArn"
-          ContainerName: backend-flask
+          ContainerName: 'backend-flask'
           ContainerPort: !Ref ContainerPort
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-            - !GetAtt ServiceSG.GroupId
+            - Fn::ImportValue:
+                !Sub "${ClusterStack}ServiceSecurityGroupId"
           Subnets:
             Fn::Split:
               - ","
@@ -114,12 +117,13 @@ Resources:
       ServiceName: !Ref ServiceName
       TaskDefinition: !Ref TaskDefinition
   TaskDefinition:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref TaskFamily
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       TaskRoleArn: !GetAtt TaskRole.Arn
-      NetworkMode: awsvpc
+      NetworkMode: 'awsvpc'
       Cpu: !Ref ServiceCpu
       Memory: !Ref ServiceMemory
       RequiresCompatibilities:
@@ -153,7 +157,7 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-group: cruddur
-              awslogs-region: us-east-2
+              awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: !Ref ServiceName
           Environment:
             - Name: OTEL_SERVICE_NAME
@@ -191,8 +195,8 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: [ecs-tasks.amazonaws.com]
-            Action: ['sts:AssumeRole']
+              Service: 'ecs-tasks.amazonaws.com'
+            Action: 'sts:AssumeRole'
       Policies:
         - PolicyName: 'cruddur-execution-policy'
           PolicyDocument:
@@ -227,8 +231,8 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: [ecs-tasks.amazonaws.com]
-            Action: ['sts:AssumeRole']
+              Service: 'ecs-tasks.amazonaws.com'
+            Action: 'sts:AssumeRole'
       Policies:
         - PolicyName: 'cruddur-task-policy'
           PolicyDocument:
@@ -245,9 +249,3 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
         - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
-
-Outputs:
-  ServiceSecurityGroupId:
-    Value: !GetAtt ServiceSG.GroupId
-    Export:
-      Name: !Sub "${AWS::StackName}ServiceSecurityGroupId"
