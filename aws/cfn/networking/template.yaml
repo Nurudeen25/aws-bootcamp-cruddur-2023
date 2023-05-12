@@ -47,6 +47,7 @@ Resources:
         - Key: Name 
           Value: !Sub "${AWS::StackName}VPC"
   IGW:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-internetgateway.html
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
@@ -58,6 +59,7 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref IGW
   RouteTable:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-routetable.html
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
@@ -65,6 +67,7 @@ Resources:
         - Key: Name
           Value: !Sub "${AWS::StackName}RT"
   RouteToIGW:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route.html
     Type: AWS::EC2::Route
     DependsOn: AttachIGW
     Properties:
@@ -72,6 +75,7 @@ Resources:
        GatewayId: !Ref IGW
        DestinationCidrBlock: 0.0.0.0/0
   PubSubnet1:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref Az1
@@ -81,7 +85,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}CruddurPub-Subnet1"
+          Value: !Sub "${AWS::StackName}PubSubnet1"
   PubSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
@@ -92,7 +96,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}CruddurPub-Subnet2"
+          Value: !Sub "${AWS::StackName}PubSubnet2"
   PubSubnet3:
     Type: AWS::EC2::Subnet
     Properties:
@@ -103,40 +107,43 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}CruddurPub-Subnet3"
+          Value: !Sub "${AWS::StackName}PubSubnet3"
   PrivSubnet1:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref Az1
       CidrBlock: !Select [3, !Ref SubnetCidrBlocks]
       EnableDns64: false 
-      MapPublicIpOnLaunch: false #priv subnet
+      MapPublicIpOnLaunch: false #public subnet
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}CruddurPriv-Subnet1"
+          Value: !Sub "${AWS::StackName}PrivSubnet1"
   PrivSubnet2:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref Az2
       CidrBlock: !Select [4, !Ref SubnetCidrBlocks]
       EnableDns64: false 
-      MapPublicIpOnLaunch: false #priv subnet
+      MapPublicIpOnLaunch: false #public subnet
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}CruddurPriv-Subnet2"
+          Value: !Sub "${AWS::StackName}PrivSubnet2"
   PrivSubnet3:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref Az3
       CidrBlock: !Select [5, !Ref SubnetCidrBlocks]
       EnableDns64: false 
-      MapPublicIpOnLaunch: false #priv subnet
+      MapPublicIpOnLaunch: false #public subnet
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}CruddurPriv-Subnet3"
+          Value: !Sub "${AWS::StackName}PrivSubnet3"
   PubSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
