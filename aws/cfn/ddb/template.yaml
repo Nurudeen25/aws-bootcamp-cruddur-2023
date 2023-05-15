@@ -15,6 +15,9 @@ Parameters:
   Timeout:
     Type: Number
     Default: 3
+  DeletionProtectionEnabled: 
+    Type: String
+    Default: false
 Resources:
   DynamoDBTable:
   # https://docs.aws.amazon.com/lambda/latest/dg/kinesis-tutorial-spec.html
@@ -37,7 +40,7 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       BillingMode: PROVISIONED
-      DeletionProtectionEnabled: true
+      DeletionProtectionEnabled: !Ref DeletionProtectionEnabled
       GlobalSecondaryIndexes:
         - IndexName : message-group-sk-index
           KeySchema : 
@@ -52,13 +55,11 @@ Resources:
             WriteCapacityUnits: 5
       StreamSpecification:
         StreamViewType: NEW_IMAGE
-      Metadata:
-        SamResourceId: DynamoDBTable
   ProcessDynamoDBStream:
   #https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: aws/lambdas/cruddur-messaging-stream
+      CodeUri: .aws-sam/build
       PackageType: Zip
       Handler: lambda_handler
       Runtime: !Ref PythonRuntime
@@ -76,15 +77,12 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: "/aws/lambda/cruddur-messaging-stream"
-      RententionInDays: 14
   LambdaLogStream:
     Type: AWS::Logs::LogStream
     Properties:
       LogGroupName: 
         Ref: LambdaLogGroup
       LogStreamName: LambdaExecution
-    Metadata:
-      SamResourceId: LambdaLogStream
   ExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -94,12 +92,14 @@ Resources:
         Statement:
           - Effect: Allow
             Action: logs:CreateLogGroup
-            Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
           - Effect: Allow
             Action:
               - logs:CreateLogStream
               - logs:PutLogEvents
-            Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${LambdaLogGroup}:*
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${LambdaLogGroup}:*"
           - Effect: Allow
             Action:
               - ec2:CreateNetworkInterface
@@ -117,5 +117,3 @@ Resources:
               - dynamodb:GetShardIterator
               - dynamodb:ListStreams
             Resource: "*"
-      Metadata:
-        SamResourceId: ExecutionRole
