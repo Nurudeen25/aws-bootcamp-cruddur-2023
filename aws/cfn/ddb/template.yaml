@@ -50,16 +50,18 @@ Resources:
             WriteCapacityUnits: 5
       StreamSpecification:
         StreamViewType: NEW_IMAGE
+      Metadata:
+        SamResourceId: DynamoDBTable
   ProcessDynamoDBStream:
   #https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
     Type: AWS::Serverless::Function
     Properties:
       Architectures: arm64
-      CodeUri: 
-      InlineCode: 
-      PackageType: Zip
+      CodeUri: ???
+      InlineCode : ???
+      PackageType: ZIP
       Handler: lambda_handler
-      Runtime: !Ref PythonRuntime
+      Runtime: Ref PythonRuntime
       Role: !GetAtt ExecutionRole.Arn
       MemorySize: !Ref MemorySize
       Timeout: !Ref Timeout
@@ -70,9 +72,6 @@ Resources:
             Stream: !GetAtt DynamoDBTable.StreamArn
             BatchSize: 1
             StartingPosition: LATEST
-
-
-
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -81,8 +80,11 @@ Resources:
   LambdaLogStream:
     Type: AWS::Logs::LogStream
     Properties:
-      LogGroupName: !Ref LambdaLogGroup
+      LogGroupName: 
+        Ref: LambdaLogGroup
       LogStreamName: LambdaExecution
+    Metadata:
+      SamResourceId: LambdaLogStream
   ExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -92,13 +94,12 @@ Resources:
         Statement:
           - Effect: Allow
             Action: logs:CreateLogGroup
-            Resource: "arn:aws:logs:us-east-2:182722375787:*"
+            Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*
           - Effect: Allow
             Action:
               - logs:CreateLogStream
               - logs:PutLogEvents
-            Resource:
-              - "arn:aws:logs:us-east-2:182722375787:log-group:/aws/lambda/cruddur-messaging-stream:*"
+            Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${LambdaLogGroup}:*
           - Effect: Allow
             Action:
               - ec2:CreateNetworkInterface
@@ -107,7 +108,14 @@ Resources:
             Resource: "*"
           - Effect: Allow
             Action:
-              - ec2:CreateNetworkInterface
-              - ec2:DeleteNetworkInterface
-              - ec2:DescribeNetworkInterfaces
+              - lambda:InvokeFunction
             Resource: "*"
+          - Effect: Allow
+            Action:
+              - dynamodb:DescribeStream
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:ListStreams
+            Resource: "*"
+      Metadata:
+        SamResourceId: ExecutionRole
