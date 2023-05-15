@@ -14,3 +14,6 @@ gp env CFN_BUCKET="cfn-harvestdam-artifacts"
 After creating the rds db cfn. Have to change the endpoint from AWS system manager - Parameter store
 After implementing the CFN service-deploy, The backend service is still not in healthy, So i checked the
 backend TG, to the healthchecks- edit and override the port 80 to 4567 and my backend-service is healthy.
+
+ #use container is for buld the lambda in a container
+  # it's still using the runtimes and its not a custom runtime
