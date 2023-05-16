@@ -34,3 +34,5 @@ backend TG, to the healthchecks- edit and override the port 80 to 4567 and my ba
    19  ./bin/sam/ddb/build 
    20  ./bin/sam/ddb/package 
    21  history
+
+   I created the cicd-deploy, nested stack, codebuild.yaml, template.yaml and deploy to cfn, Then i have to go to Codepipeline connection and update the pending connection
