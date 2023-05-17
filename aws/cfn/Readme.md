@@ -18,21 +18,15 @@ backend TG, to the healthchecks- edit and override the port 80 to 4567 and my ba
  #use container is for buld the lambda in a container
   # it's still using the runtimes and its not a custom runtime
 
-      6  sam --version
-    7  sam docs
-    8  chmod u+x ./bin/cfn/ddb-deploy 
-    9  ./bin/cfn/ddb-deploy 
-   10  sam validate -t aws/cfn/ddb/template.yaml 
-   11  python --version
-   12  ./bin/cfn/ddb-deploy 
-   13  python --version
-   14  pyenv install 3.9
-   15  ./bin/cfn/ddb-deploy 
-   16  chmod u+x ./bin/sam/ddb/build
-   17  chmod u+x ./bin/sam/ddb/package 
-   18  chmod u+x ./bin/sam/ddb/deploy 
-   19  ./bin/sam/ddb/build 
-   20  ./bin/sam/ddb/package 
-   21  history
+
 
    I created the cicd-deploy, nested stack, codebuild.yaml, template.yaml and deploy to cfn, Then i have to go to Codepipeline connection and update the pending connection
+
+
+   I ran through this error when deploying  CFN static website hosting
+   
+   Resource handler returned message: "Invalid request provided: AWS::CloudFront::Distribution: The certificate that is attached to your distribution doesn't cover the alternate domain name (CNAME) that you're trying to add. For more details, see: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-requirements (Service: CloudFront, Status Code: 400, Request ID: 86011233-b6c5-4771-9ac3-1ce2540d1220)" (RequestToken: c9070ef5-2c08-71c7-cf9e-52295f159695, HandlerErrorCode: InvalidRequest)
+
+   I had to go into ACM. I go into my certificate ID and find out i only have *.harvestdam.com as domain. So i had to reqest a new certificate and the new certificate have to domain *.harvestdam.com and harvestdam.com but the certificate is not in use yet, Then went into Cloudfront edit my SSL certificate to the new SSL certificate, i choose the HTTP/2 and HTTP/3 based on my configuration on my code and i save changes. I wait for the clondfront to deploy the new changes and i go ahead and provision my infrastructure. 
+
+   For the CertificateArn - Make sure to use ACM us-east-1 Arn
