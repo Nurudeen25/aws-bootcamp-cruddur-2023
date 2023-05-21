@@ -4,6 +4,6 @@ region = 'us-east-2'
 stack_name = 'CrdSrvBackendFlask'
 
 
-[Parameters]
-EnvFrontendUrl = 'harvestdam.com'
-EnvBackendUrl = 'api.harvestdam.com'
+[parameters]
+EnvFrontendUrl = 'https://harvestdam.com'
+EnvBackendUrl = 'https://api.harvestdam.com'
