@@ -5,5 +5,5 @@ stack_name = 'CrdSrvBackendFlask'
 
 
 [Parameters]
-EnvFrontendUrl = 'harvestdam.com
+EnvFrontendUrl = 'harvestdam.com'
 EnvBackendUrl = 'api.harvestdam.com'
