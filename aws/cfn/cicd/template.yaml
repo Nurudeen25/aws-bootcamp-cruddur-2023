@@ -17,7 +17,7 @@ Parameters:
   ArtifactBucketName:
     Type: String
 Resources:
-  CodeBuildBakeImageStack:
+  CodeBuild:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -68,7 +68,7 @@ Resources:
                 - Name: ImageDefinition
               Configuration:
           # when you have a cross stack the way you access data from it you export it or use the .output to get it
-                ProjectName: !GetAtt CodeBuildBakeImageStack.Outputs.CodeBuildProjectName
+                ProjectName: !GetAtt CodeBuild.Outputs.CodeBuildProjectName
                 BatchEnabled: false
         # https://docs.aws.amazon.com/codepipeline/latest/userguide/action-reference-ECS.html
         - Name: Deploy
@@ -164,5 +164,5 @@ Resources:
                     - ':'
                     - !Ref AWS::AccountId
                     - ':project/'
-                    - !GetAtt CodeBuildBakeImageStack.Outputs.CodeBuildProjectName
+                    - !GetAtt CodeBuild.Outputs.CodeBuildProjectName
 
