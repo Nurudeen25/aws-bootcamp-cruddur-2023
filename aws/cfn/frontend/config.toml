@@ -1,0 +1,9 @@
+[deploy]
+bucket = 'cfn-harvestdam-artifacts'
+region = 'us-east-2'
+stack_name = 'CrdFrontend'
+
+[parameters]
+CertificateArn = 'arn:aws:acm:us-east-1:182722375787:certificate/a8cdcbba-f554-4c21-9e0b-ff5683061188'
+WwwBucketName = 'www.harvestdam.com'
+RootBucketName = 'harvestdam.com'

@@ -1,0 +1,9 @@
+[deploy]
+bucket = 'cfn-harvestdam-artifacts'
+region = 'us-east-2'
+stack_name = 'CrdSrvBackendFlask'
+
+
+[parameters]
+EnvFrontendUrl = 'https://harvestdam.com'
+EnvBackendUrl = 'https://api.harvestdam.com'
