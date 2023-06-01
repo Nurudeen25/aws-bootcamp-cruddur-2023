@@ -3,7 +3,7 @@ import React from "react";
 import process from 'process';
 import {ReactComponent as BombIcon} from './svg/bomb.svg';
 import {post} from 'lib/Requests';
-import FormErrors  from 'components/FormErrors';
+import FormErrors from 'components/FormErrors';
 
 export default function ActivityForm(props) {
   const [count, setCount] = React.useState(0);
@@ -25,19 +25,20 @@ export default function ActivityForm(props) {
       ttl: ttl
     }
     post(url,payload_data,{
-      auth: true,
-      setErrors: setErrors,
-      success: function(data){
-        // add activity to the feed
-        props.setActivities(current => [data,...current]);
-        // reset and close the form
-        setCount(0)
-        setMessage('')
-        setTtl('7-days')
-        props.setPopped(false)
-      }
-  })
-}
+        auth: true,
+        setErrors: setErrors,
+        success: function(data){
+          // add activity to the feed
+          props.setActivities(current => [data,...current]);
+          // reset and close the form
+          setCount(0)
+          setMessage('')
+          setTtl('7-days')
+          props.setPopped(false)
+        }
+    })
+  }
+
   const textarea_onchange = (event) => {
     setCount(event.target.value.length);
     setMessage(event.target.value);
