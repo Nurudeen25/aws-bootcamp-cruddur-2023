@@ -31,12 +31,12 @@ class CreateMessage:
     if model['errors']:
       # return what we provided
       model['data'] = {
-       #'display_name': 'Andrew Brown',
+        'display_name': 'display_name',
         'handle':  user_sender_handle,
         'message': message
       }
     else:
-      sql = db.template('users', 'create_message_users')
+      sql = db.template('users','create_message_users')
 
       if user_receiver_handle == None:
         rev_handle = ''
@@ -80,4 +80,4 @@ class CreateMessage:
           other_user_handle=other_user['handle']
         )
       model['data'] = data
-    return model 
+    return model

@@ -49,7 +49,7 @@ const router = createBrowserRouter([
     element: <UserFeedPage />
   },
   {
-    path: "/@:handle.status/activity_uuid",
+    path: "/@:handle/status/:activity_uuid",
     element: <ActivityShowPage />
   },
   {
