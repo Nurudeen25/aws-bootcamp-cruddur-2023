@@ -1,9 +1,9 @@
 version=0.1
-[default.build.Parameters]
+[default.build.parameters]
 region = "us-east-2"
 
-[default.package.Parameters]
+[default.package.parameters]
 region = "us-east-2"
 
-[default.deploy.Parameters]
+[default.deploy.parameters]
 region = "us-east-2"
