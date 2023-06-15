@@ -75,4 +75,4 @@ In config.toml template where I defined - bucket -region -stack name - Certifica
 ![](assets/Frontend-static-website.png)
 
 
-![](assets/CFNDiagram.png)
+![](assets/Diagram-CFN.png)
