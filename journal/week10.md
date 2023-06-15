@@ -73,3 +73,6 @@ I Implement CFN Static Website Hosting for Frontend. I have template.yaml and co
 In config.toml template where I defined - bucket -region -stack name - Certificate ARN - WWWBucketname - Naked domain bucket name
 
 ![](assets/Frontend-static-website.png)
+
+
+![](assets/CFNDiagram.png)
