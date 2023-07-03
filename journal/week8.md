@@ -78,7 +78,7 @@ THUMBING_FUNCTION_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/lambdas/process
 ```
 
 Need to modify the thumbing-serverless-cdk-stack.ts file with lambda code functions to process the image with the s3 bucket
-To view the thumbing-serverless-cdk-stack.ts file, here here  [thumbing-serverless-cdk-stack.t](https://github.com/Nurudeen25/aws-bootcamp-cruddur-2023/blob/main/thumbing-serverless-cdk/lib/thumbing-serverless-cdk-stack.ts)
+To view the thumbing-serverless-cdk-stack.ts file, head here  [thumbing-serverless-cdk-stack.ts](https://github.com/Nurudeen25/aws-bootcamp-cruddur-2023/blob/main/thumbing-serverless-cdk/lib/thumbing-serverless-cdk-stack.ts)
 
 ![](assets/ThumbingServerlessCdkStack.png)
 ![](assets/ThumbLambdadeen-Lambda.png)
